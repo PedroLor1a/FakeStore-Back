@@ -64,9 +64,23 @@ const putProducts = async (id, updateProduct) => {
   return product;
 };
 
+const createProducts = async (title, price, category, image) => {
+  const createProduct = await Products.create({
+    title,
+    price,
+    category,
+    image,
+  });
+  if (!createProduct) {
+    throw new Error("No se pudo crear un nuevo producto");
+  }
+  return createProduct;
+};
+
 module.exports = {
   getProducts,
   getProductsById,
   getProductsByName,
   putProducts,
+  createProducts,
 };

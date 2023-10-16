@@ -4,6 +4,7 @@ const {
   getProductsById,
   getProductsByName,
   putProducts,
+  createProducts,
 } = require("../controllers/productsController");
 
 const router = Router();
@@ -35,6 +36,17 @@ router.get("/byname/:name", async (req, res) => {
     const response = await getProductsByName(name);
     res.status(200).json(response);
   } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
+});
+
+router.post("/create", async (req, res) => {
+  const { title, price, category, image } = req.body;
+  try {
+    const createProduct = await createProducts(title, price, category, image);
+    res.status(200).json(createProduct);
+  } catch (error) {
+    console.error(error);
     res.status(400).send({ message: error.message });
   }
 });
