@@ -41,9 +41,15 @@ router.get("/byname/:name", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const { title, price, category, image } = req.body;
+  const { title, price, category, image, idCategory } = req.body;
   try {
-    const createProduct = await createProducts(title, price, category, image);
+    const createProduct = await createProducts(
+      title,
+      price,
+      category,
+      image,
+      idCategory
+    );
     res.status(200).json(createProduct);
   } catch (error) {
     console.error(error);

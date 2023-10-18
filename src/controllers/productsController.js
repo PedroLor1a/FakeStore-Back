@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { Products } = require("../db");
+const { Products, Category } = require("../db");
 
 const getProducts = async () => {
   //   const response = await axios("https://fakestoreapi.com/products");
@@ -36,6 +36,13 @@ const getProductsById = async (id) => {
     where: {
       id: id,
     },
+    include: {
+      model: Category,
+      attributes: ["name"],
+      through: {
+        attributes: [],
+      },
+    },
   });
   if (!response) {
     throw new Error("No existe producto con ese id");
@@ -47,6 +54,13 @@ const getProductsByName = async (name) => {
   const response = await Products.findAll({
     where: {
       title: name,
+    },
+    include: {
+      model: Category,
+      attributes: ["name"],
+      through: {
+        attributes: [],
+      },
     },
   });
   if (!response) {
@@ -64,16 +78,22 @@ const putProducts = async (id, updateProduct) => {
   return product;
 };
 
-const createProducts = async (title, price, category, image) => {
+const createProducts = async (title, price, category, image, idCategory) => {
   const createProduct = await Products.create({
     title,
     price,
     category,
     image,
+    idCategory,
   });
   if (!createProduct) {
     throw new Error("No se pudo crear un nuevo producto");
   }
+  const categorys = await Category.findByPk(idCategory);
+  if (!category) {
+    throw new Error("No se encontro category");
+  }
+  await createProduct.addCategory(categorys);
   return createProduct;
 };
 

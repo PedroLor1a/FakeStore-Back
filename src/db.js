@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
 const ProductsModel = require("./models/Products");
-const CartModel = require("./models/Cart");
+const CategoryModel = require("./models/Category");
 
 const sequelize = new Sequelize(
   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/fakestore`,
@@ -41,12 +41,18 @@ sequelize.models = Object.fromEntries(capsEntries);
 // ReviewModel(sequelize);
 // UserModel(sequelize);
 ProductsModel(sequelize);
-CartModel(sequelize);
+CategoryModel(sequelize);
 
-const { Products, Cart } = sequelize.models;
+const { Products, Category } = sequelize.models;
 
-Cart.belongsToMany(Products, { through: "ProductsCart", timestamps: false });
-Products.belongsToMany(Cart, { through: "ProductsCart", timestamps: false });
+Category.belongsToMany(Products, {
+  through: "ProductsCategory",
+  timestamps: false,
+});
+Products.belongsToMany(Category, {
+  through: "ProductsCategory",
+  timestamps: false,
+});
 
 module.exports = {
   ...sequelize.models,
